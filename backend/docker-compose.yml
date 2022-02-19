@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+
+  redis-server:
+    image: "redis"
+    ports:
+      - "6379:6379"
+  
+  node-app:
+    build: .
+    ports: 
+     - "8082:3000"
