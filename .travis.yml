@@ -8,6 +8,10 @@ before_install:
 script:
  - docker run chinedu117/react_app npm run test -- --coverage
 
+
+before_deploy:
+  - cd frontend
+
 deploy:
   provider: elasticbeanstalk
   region: "us-west-2"
