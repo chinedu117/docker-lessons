@@ -36,7 +36,7 @@ jobs:
 
               aws elasticbeanstalk create-application-version \
               --application-name $APPLICATION_NAME \
-              --source-bundle S3Bucket=$S3_BUCKET, S3_Key=$BUILD_FILE_NAME \
+              --source-bundle S3Bucket=$S3_BUCKET, S3Key=$BUILD_FILE_NAME \
               --version-label "ver-${{ github.sha }}" \
               --description "commit-sha-${{ github.sha }}" 
 
