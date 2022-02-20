@@ -22,7 +22,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
       
-        # s3://bucket-name/app_name
+        # s3://bucket-name/app_name/
       - name: Put into s3 bucket
         run: aws s3 cp $BUILD_FILE_NAME ${{ secrets.AWS_EBS_BUCKET_PATH }} 
         
@@ -38,7 +38,8 @@ jobs:
               --application-name $APPLICATION_NAME \
               --source-bundle S3Bucket=$S3_BUCKET,S3Key=$BUILD_FILE_NAME \
               --version-label "ver-${{ github.sha }}" \
-              --description "commit-sha-${{ github.sha }}" 
+              --description "commit-sha-${{ github.sha }}" \
+              --auto-create-application
 
 
       - name: Deploy new ElasticBeanStalk Version
