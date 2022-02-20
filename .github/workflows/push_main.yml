@@ -10,6 +10,7 @@ jobs:
     env: 
       BUILD_FILE_NAME: deploy_package.zip
       APPLICATION_NAME: ${{ secrets.AWS_EBS_APPLICATION_NAME }}
+      ENVIRONMENT_NAME: ${{ secrets.AWS_EBS_ENVIRONMENT_NAME }} 
     steps:
       - uses: actions/checkout@v2
 
@@ -46,7 +47,7 @@ jobs:
       - name: Deploy new ElasticBeanStalk Version
         run: |
             aws elasticbeanstalk update-environment \ 
-            --environment-name ${{ secrets.AWS_EBS_ENVIRONMENT_NAME }} \
+            --environment-name $ENVIRONMENT_NAME \
             --version-label "ver-${{ github.sha }}"
 
     
