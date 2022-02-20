@@ -9,8 +9,10 @@ script:
   - docker run chinedu117/react_app npm run test -- --coverage
 
 
-# before_deploy:
-#   - cd frontend
+before_deploy:
+  - echo "Entering the frontend folder"
+  - cd frontend
+  - ls -l
 
 deploy:
   provider: elasticbeanstalk
