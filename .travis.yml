@@ -15,13 +15,15 @@ before_deploy:
   - ls -l
 
 deploy:
+  on:
+    branch: main
+    
   provider: elasticbeanstalk
   region: "us-west-2"
   app: "react_app"
   env: "Reactapp-env"
   bucket_name: "elasticbeanstalk-us-west-2-772055451862"
   bucket_path: "react_app"
-  on:
-    branch: main
+ 
   access_key_id: $AWS_ACCESS_KEY
   secret_access_key: $AWS_SECRET_KEY

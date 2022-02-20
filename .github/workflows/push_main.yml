@@ -1,0 +1,50 @@
+name: deploy-frontend-to-elasticbeanstalk
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy-to-aws-elasticbeanstalk:
+    runs-on: ubuntu-latest
+    env: 
+      BUILD_FILE_NAME: deploy_package.zip
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Create a zip package of the folder to deploy
+        run: zip -r $BUILD_FILE_NAME ./frontend/
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: $ {{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: $ {{ secrets.AWS_REGION }}
+      
+        # s3://bucket-name/app_name
+      - name: Put into s3 bucket
+        run: aws s3 cp $BUILD_FILE_NAME ${{ secrets.AWS_EBS_BUCKET_PATH }} 
+        
+      - name: Create New ElasticBeanstalk Application Version
+        env:
+            APPLICATION_NAME: ${{ secrets.AWS_EBS_APPLICATION_NAME }}
+            S3_BUCKET: ${{ secrets.AWS_EBS_BUCKET_PATH }}
+            
+          
+        run: |
+
+              aws elasticbeanstalk create-application-version\
+              --application-name $APPLICATION_NAME \
+              --source-bundle S3Bucket=$S3_BUCKET, S3_Key=$BUILD_FILE_NAME \
+              --version-label "ver-${{ github.sha }}" \
+              --description "commit-sha-${{ github.sha }}" 
+
+
+      - name: Deploy new ElasticBeanStalk Version
+        run: |
+            aws elasticbeanstalk update-environment \ 
+            --environment-name ${{ secrets.AWS_EBS_ENVIRONMENT_NAME }} \
+            --version-lable "ver-${{ github.sha }}"
+
+    
