@@ -11,6 +11,7 @@ jobs:
       BUILD_FILE_NAME: deploy_package.zip
       APPLICATION_NAME: ${{ secrets.AWS_EBS_APPLICATION_NAME }}
       ENVIRONMENT_NAME: ${{ secrets.AWS_EBS_ENVIRONMENT_NAME }} 
+      VERSION_LABEL: ver-${{ github.sha }} 
     steps:
       - uses: actions/checkout@v2
 
@@ -39,12 +40,12 @@ jobs:
               aws elasticbeanstalk create-application-version \
               --application-name $APPLICATION_NAME \
               --source-bundle S3Bucket=$S3_BUCKET,S3Key=$APPLICATION_NAME/$BUILD_FILE_NAME \
-              --version-label "ver-${{ github.sha }}" \
+              --version-label $VERSION_LABEL \
               --description "commit-sha-${{ github.sha }}" \
               --auto-create-application
 
 
       - name: Deploy new ElasticBeanStalk Version
-        run: aws elasticbeanstalk update-environment --environment-name $ENVIRONMENT_NAME --version-label "ver-${{ github.sha }}"
+        run: aws elasticbeanstalk update-environment --environment-name $ENVIRONMENT_NAME --version-label $VERSION_LABEL
 
     
