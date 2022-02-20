@@ -8,7 +8,7 @@ jobs:
   deploy-to-aws-elasticbeanstalk:
     runs-on: ubuntu-latest
     env: 
-      BUILD_FILE_NAME: deploy_package.zip
+      BUILD_FILE_NAME: deploy_package_ver_${{ github.sha }}.zip
       APPLICATION_NAME: ${{ secrets.AWS_EBS_APPLICATION_NAME }}
       ENVIRONMENT_NAME: ${{ secrets.AWS_EBS_ENVIRONMENT_NAME }} 
       VERSION_LABEL: ver-${{ github.sha }} 
