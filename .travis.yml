@@ -4,5 +4,6 @@ services:
 before_install: 
   - docker build -t chinedu117/react_app -f Dockerfile.dev ./frontend
 
+  
 script:
  - docker run chinedu117/react_app npm run test -- --coverage
