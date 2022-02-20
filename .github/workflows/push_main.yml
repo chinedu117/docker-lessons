@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       BUILD_FILE_NAME: deploy_package.zip
+      APPLICATION_NAME: ${{ secrets.AWS_EBS_APPLICATION_NAME }}
     steps:
       - uses: actions/checkout@v2
 
@@ -24,19 +25,19 @@ jobs:
       
         # s3://bucket-name/app_name/
       - name: Put into s3 bucket
-        run: aws s3 cp $BUILD_FILE_NAME s3://${{ secrets.AWS_EBS_BUCKET_PATH }} 
+        run: aws s3 cp $BUILD_FILE_NAME s3://${{ secrets.AWS_S3_BUCKET_NAME }}/$APPLICATION_NAME/
         
       - name: Create New ElasticBeanstalk Application Version
         env:
-            APPLICATION_NAME: ${{ secrets.AWS_EBS_APPLICATION_NAME }}
-            S3_BUCKET: ${{ secrets.AWS_EBS_BUCKET_PATH }}
+            
+            S3_BUCKET: ${{ secrets.AWS_S3_BUCKET_NAME }}
             
           
         run: |
 
               aws elasticbeanstalk create-application-version \
               --application-name $APPLICATION_NAME \
-              --source-bundle S3Bucket=$S3_BUCKET,S3Key=$BUILD_FILE_NAME \
+              --source-bundle S3Bucket=$S3_BUCKET,S3Key=/$APPLICATION_NAME/$BUILD_FILE_NAME \
               --version-label "ver-${{ github.sha }}" \
               --description "commit-sha-${{ github.sha }}" \
               --auto-create-application
