@@ -45,6 +45,6 @@ jobs:
         run: |
             aws elasticbeanstalk update-environment \ 
             --environment-name ${{ secrets.AWS_EBS_ENVIRONMENT_NAME }} \
-            --version-lable "ver-${{ github.sha }}"
+            --version-label "ver-${{ github.sha }}"
 
     
