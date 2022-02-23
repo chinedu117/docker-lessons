@@ -1,7 +1,7 @@
 import React from "react"
 import { Link } from "react-router-dom"
 
-export default () => {
+const otherpage = () => {
      
     return (
         <div>
@@ -10,3 +10,5 @@ export default () => {
         </div>
     );
 };
+
+export default otherpage

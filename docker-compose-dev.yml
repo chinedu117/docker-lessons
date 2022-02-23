@@ -1,17 +1,29 @@
 version: "3"
 
 services:
+
   redis:
     image: "redis:latest"
+
   postgres:
     image: "postgres:14.1-alpine"
+    
+    environment:
+      - POSTGRES_PASSWORD=password
   
   
   nginx:
+    # nginx must be avaliable
     restart: always
+    depends_on:
+      - api
+      - frontend
+
     build:
       dockerfile: Dockerfile.dev
       context: ./nginx
+    ports:
+      - "3050:80"
   
   frontend:
     stdin_open: true
@@ -21,10 +33,10 @@ services:
     volumes:
       - /app/node_modules
       - "./frontend:/app"
-    ports:
-      - "3000:3000"
-
   api:
+    depends_on:
+      - postgres
+      - redis
     build:
       context: ./server
       dockerfile: Dockerfile.dev
@@ -39,9 +51,11 @@ services:
       - PGDATABASE=postgres
       - PGPASSWORD=password
       - PGPORT=5432
-
+      
 
   worker:
+    depends_on:
+      - redis
     build:
       context: ./worker
       dockerfile: Dockerfile.dev
