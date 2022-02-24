@@ -1,0 +1,73 @@
+on:
+  push:
+    branches:
+      - 'main'
+
+
+jobs:
+  build-and-push-to-docker-hub:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
+      - name: Build worker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./worker
+          file: ./worker/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/app-worker:latest
+
+      - name: Build frontend image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/app-frontend:latest
+      
+      - name: Build server image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./server
+          file: ./frontend/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/app-api:latest
+
+      - name: Build nginx image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./nginx
+          file: ./nginx/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/app-nginx:latest
+    
+      
+      # - name: Build and export to Docker
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: .
+      #     load: true
+      #     tags: ${{ env.TEST_TAG }}
+      
+      # - name: Test
+      #   run: |
+      #     docker run --rm ${{ env.TEST_TAG }} npm run test
+      
+      # - name: Build and push
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: .
+      #     platforms: linux/amd64,linux/arm64
+      #     push: true
+      #     tags: user/app:latest

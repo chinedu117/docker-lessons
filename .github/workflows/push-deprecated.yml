@@ -2,7 +2,7 @@ name: deploy-frontend-to-elasticbeanstalk
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "deprecated" ]
 
 jobs:
   deploy-to-aws-elasticbeanstalk:
