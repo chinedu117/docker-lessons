@@ -26,7 +26,7 @@ jobs:
           context: ./worker
           file: ./worker/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/app-worker:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/app-worker:latest
 
       - name: Build frontend image
         uses: docker/build-push-action@v2
